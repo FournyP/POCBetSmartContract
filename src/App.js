@@ -2,7 +2,7 @@ import Web3 from "web3";
 import React from "react";
 import Main from "./Main";
 import Navbar from "./Navbar";
-import { BetPool } from "services";
+import { EthPriceBetPool } from "./services";
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -20,14 +20,15 @@ async function loadWeb3() {
 function App() {
   const [isLoading, setIsLoading] = React.useState(true);
 
+  const [account, setAccount] = React.useState("");
   const [betBalance, setBetBalance] = React.useState(0);
   const [gainBalance, setGainBalance] = React.useState(0);
   const [isExecutedBet, setIsExecutedBet] = React.useState(false);
 
   const loadDatas = async (web3, account) => {
-    let tmpBetBalance = await BetPool.getBets(web3, account);
-    let tmpGainBalance = await BetPool.getGains(web3, account);
-    let tmpIsExecutedBet = await BetPool.isExecutedBet(web3);
+    let tmpBetBalance = await EthPriceBetPool.getBets(web3, account);
+    let tmpGainBalance = await EthPriceBetPool.getGains(web3, account);
+    let tmpIsExecutedBet = await EthPriceBetPool.isExecutedBet(web3);
 
     setBetBalance(tmpBetBalance);
     setGainBalance(tmpGainBalance);
@@ -37,16 +38,17 @@ function App() {
   React.useEffect(() => {
     loadWeb3().then(async () => {
       const web3 = window.web3;
-      const account = await web3.eth.getAccounts()[0];
+      const tmpAccount = (await web3.eth.getAccounts())[0];
+      setAccount(tmpAccount);
 
-      await loadDatas(web3, account);
+      await loadDatas(web3, tmpAccount);
       setIsLoading(false);
     });
   }, []);
 
   return (
     <div>
-      <Navbar account={this.state.account} />
+      <Navbar account={account} />
       <div className="container-fluid mt-5">
         <div className="row">
           <main
@@ -61,6 +63,7 @@ function App() {
                 </p>
               ) : (
                 <Main
+                  account={account}
                   beforeAction={() => {
                     setIsLoading(true);
                   }}

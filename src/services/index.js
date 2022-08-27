@@ -1,3 +1,3 @@
-import * as BetPool from "./BetPool";
+import * as EthPriceBetPool from "./EthPriceBetPool";
 
-export { BetPool };
+export { EthPriceBetPool };

@@ -1,12 +1,15 @@
-import BetPool from "abis/BetPool.json";
+import EthPriceBetPool from "../abis/EthPriceBetPool.json";
 
 async function createBetPoolInstance(web3) {
   let networkId = await web3.eth.net.getId();
 
-  let comptrollerData = BetPool.networks[networkId];
+  let ethPriceBetPoolData = EthPriceBetPool.networks[networkId];
 
-  if (comptrollerData) {
-    return new web3.eth.Contract(BetPool.abi, comptrollerData.address);
+  if (ethPriceBetPoolData) {
+    return new web3.eth.Contract(
+      EthPriceBetPool.abi,
+      ethPriceBetPoolData.address
+    );
   }
 }
 
@@ -60,14 +63,14 @@ export async function executeBet(web3, account) {
 
 export async function getGains(web3, account) {
   let betPoolContract = await createBetPoolInstance(web3);
-  let balance = await betPoolContract.methods.balanceOfGains(account).call();
+  let balance = await betPoolContract.methods.getBalanceOfGain(account).call();
 
   return web3.utils.fromWei(balance, "Ether");
 }
 
 export async function getBets(web3, account) {
   let betPoolContract = await createBetPoolInstance(web3);
-  let balance = await betPoolContract.methods.balanceOfBets(account).call();
+  let balance = await betPoolContract.methods.getBalanceOfBet(account).call();
 
   return web3.utils.fromWei(balance, "Ether");
 }
@@ -75,5 +78,5 @@ export async function getBets(web3, account) {
 export async function isExecutedBet(web3) {
   let betPoolContract = await createBetPoolInstance(web3);
 
-  return betPoolContract.methods.isExecutedBet_().call();
+  return betPoolContract.methods.getIsExecutedBet().call();
 }

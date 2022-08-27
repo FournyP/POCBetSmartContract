@@ -19,7 +19,8 @@
  */
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-//
+require("dotenv").config();
+
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
@@ -59,17 +60,16 @@ module.exports = {
     //
     // Useful for deploying to a public network.
     // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
-    ropsten: {
-      provider: () =>
-        new HDWalletProvider(
-          "mnemonic",
-          `https://goerli.infura.io/v3/4b9dc70fb0f049e99767fef83658b6be`
-        ),
-      network_id: 3, // Ropsten's id
-      gas: 5500000, // Ropsten has a lower block limit than mainnet
-      confirmations: 2, // # of confirmations to wait between deployments. (default: 0)
-      timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
+    goerli: {
+      provider: () => {
+        return new HDWalletProvider(
+          process.env.MNEMONIC.trim(),
+          "https://goerli.infura.io/v3/" + process.env.INFURA_API_KEY
+        );
+      },
+      network_id: "5", // eslint-disable-line camelcase
+      gas: 4465030,
+      gasPrice: 10000000000,
     },
     //
     // Useful for private networks

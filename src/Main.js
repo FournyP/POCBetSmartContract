@@ -1,13 +1,33 @@
 import React from "react";
 import propTypes from "prop-types";
-import { BetPool } from "services";
+import { EthPriceBetPool } from "./services";
 import eth_logo from "./eth-logo.png";
 
 function Main(props) {
-  const { betBalance, gainBalance, isExecutedBet, afterAction, beforeAction } =
-    props;
+  const {
+    account,
+    betBalance,
+    gainBalance,
+    afterAction,
+    beforeAction,
+    isExecutedBet,
+  } = props;
 
   const [amount, setAmount] = React.useState(0);
+  const [ethBalance, setEthBalance] = React.useState(0);
+
+  React.useEffect(() => {
+    if (account) {
+      let fetchEthBalance = async () => {
+        let balance = parseInt(
+          window.web3.utils.fromWei(await window.web3.eth.getBalance(account))
+        );
+
+        setEthBalance(balance);
+      };
+      fetchEthBalance();
+    }
+  }, [account]);
 
   return (
     <div id="content" className="mt-3">
@@ -34,8 +54,7 @@ function Main(props) {
                 <b>Bet Tokens</b>
               </label>
               <span className="float-right text-muted">
-                Balance:{" "}
-                {window.web3.utils.fromWei(this.props.daiTokenBalance, "Ether")}
+                Balance: {ethBalance}
               </span>
             </div>
             <div className="input-group mb-4">
@@ -65,7 +84,7 @@ function Main(props) {
                 let account = await web3.eth.getAccounts()[0];
                 let weiAmount = window.web3.utils.toWei(amount, "Ether");
 
-                BetPool.bet(web3, account, weiAmount);
+                EthPriceBetPool.bet(web3, account, weiAmount);
 
                 afterAction();
               }}
@@ -83,7 +102,7 @@ function Main(props) {
                 let web3 = window.web3;
                 let account = await web3.eth.getAccounts()[0];
 
-                await BetPool.withdrawGains(web3, account);
+                await EthPriceBetPool.withdrawGains(web3, account);
 
                 afterAction();
               }}
@@ -101,7 +120,7 @@ function Main(props) {
                 let web3 = window.web3;
                 let account = await web3.eth.getAccounts()[0];
 
-                await BetPool.executeBet(web3, account);
+                await EthPriceBetPool.executeBet(web3, account);
 
                 afterAction();
               }}
