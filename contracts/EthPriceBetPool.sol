@@ -2,7 +2,6 @@
 pragma solidity ^0.8.7;
 
 import "./EthPriceConsumer.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract EthPriceBetPool {
     struct UserBet {
@@ -10,8 +9,6 @@ contract EthPriceBetPool {
         uint256 balanceOfBet;
         uint256 balanceOfGains;
     }
-
-    event Log(string message);
 
     address[] _addressIndexes;
     mapping(address => UserBet) _usersBets;
@@ -32,9 +29,28 @@ contract EthPriceBetPool {
         _executionTimestamp = executionTimestamp;
     }
 
+    function getBalanceOfBet(address user) external view returns (uint256) {
+        UserBet memory userBet = _usersBets[user];
+
+        return userBet.balanceOfBet;
+    }
+
+    function getBalanceOfGain(address user) external view returns (uint256) {
+        UserBet memory userBet = _usersBets[user];
+
+        return userBet.balanceOfGains;
+    }
+
+    function getIsExecutedBet() external view returns (bool) {
+        return _isExecutedBet;
+    }
+
     function bet(bool choice) external payable {
-        require(block.timestamp < _executionTimestamp);
-        //require(!_usersBets[msg.sender].choice, "You have already bet");
+        //require(block.timestamp < _executionTimestamp); Remove for the demo
+        require(
+            _usersBets[msg.sender].balanceOfBet == 0,
+            "You have already bet"
+        );
 
         UserBet memory userBets = UserBet(choice, msg.value, 0);
         _usersBets[msg.sender] = userBets;

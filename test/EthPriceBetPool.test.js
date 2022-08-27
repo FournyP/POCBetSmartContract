@@ -1,5 +1,5 @@
+/* eslint-disable jest/valid-describe */
 /* eslint-disable no-undef */
-/* eslint-disable jest/valid-describe-callback */
 const { assert } = require("chai");
 
 const EthPriceBetPool = artifacts.require("EthPriceBetPool"); // the contract
@@ -30,6 +30,14 @@ contract("EthPriceBetPool Test", (accounts) => {
 
   // Test balanceOf
   describe("EthPriceBetPool must work", async () => {
+    it("Get bets and gains should return 0", async () => {
+      let bet = await ethPriceBetPool.getBalanceOfBet(accounts[0]);
+      let gains = await ethPriceBetPool.getBalanceOfGain(accounts[0]);
+
+      assert.equal(0, bet);
+      assert.equal(0, gains);
+    });
+
     it("Gain ETH", async () => {
       await ethPriceBetPool.bet(true, {
         from: accounts[0],
