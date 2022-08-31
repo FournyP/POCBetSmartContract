@@ -72,8 +72,8 @@ contract EthPriceBetPool {
         require(block.timestamp >= _executionTimestamp);
         require(!_isExecutedBet);
 
-        //int256 ethFinalPrice = _ethPriceConsumer.getLatestPrice();
-        int256 ethFinalPrice = 1200;
+        int256 ethFinalPrice = _ethPriceConsumer.getLatestPrice();
+        //int256 ethFinalPrice = 1200;
 
         uint256 losersBetting = 0;
         uint256 winnersBetting = 0;
@@ -97,6 +97,8 @@ contract EthPriceBetPool {
 
                 userBets.balanceOfGains = userBets.balanceOfBet + gains;
             }
+
+            userBets.balanceOfBet = 0;
         }
 
         _isExecutedBet = true;
