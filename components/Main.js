@@ -1,7 +1,8 @@
 import React from "react";
+import Image from "next/image";
 import propTypes from "prop-types";
-import { EthPriceBetPool } from "./services";
-import eth_logo from "./eth-logo.png";
+import { EthPriceBetPool } from "../services";
+import eth_logo from "../public/eth-logo.png";
 
 function Main(props) {
   const {
@@ -19,11 +20,10 @@ function Main(props) {
   React.useEffect(() => {
     if (account) {
       let fetchEthBalance = async () => {
-        let balance = parseInt(
+        let balance = parseFloat(
           window.web3.utils.fromWei(await window.web3.eth.getBalance(account))
         );
-
-        setEthBalance(balance);
+        setEthBalance(balance.toFixed(2));
       };
       fetchEthBalance();
     }
@@ -68,7 +68,12 @@ function Main(props) {
               />
               <div className="input-group-append">
                 <div className="input-group-text">
-                  <img src={eth_logo} height="32" alt="" />
+                  <Image
+                    width="32px"
+                    height="32px"
+                    src={eth_logo}
+                    alt="eth_logo"
+                  />
                   &nbsp;&nbsp;&nbsp; ETH
                 </div>
               </div>
@@ -77,14 +82,11 @@ function Main(props) {
               className="btn btn-primary btn-block btn-lg"
               onClick={async (event) => {
                 event.preventDefault();
-
                 beforeAction();
 
-                let web3 = window.web3;
-                let account = await web3.eth.getAccounts()[0];
                 let weiAmount = window.web3.utils.toWei(amount, "Ether");
 
-                EthPriceBetPool.bet(web3, account, weiAmount);
+                await EthPriceBetPool.bet(window.web3, account, weiAmount);
 
                 afterAction();
               }}
@@ -99,10 +101,7 @@ function Main(props) {
                 event.preventDefault();
                 beforeAction();
 
-                let web3 = window.web3;
-                let account = await web3.eth.getAccounts()[0];
-
-                await EthPriceBetPool.withdrawGains(web3, account);
+                await EthPriceBetPool.withdrawGains(window.web3, account);
 
                 afterAction();
               }}
@@ -114,13 +113,9 @@ function Main(props) {
               className="btn btn-link btn-block btn-sm"
               onClick={async (event) => {
                 event.preventDefault();
-
                 beforeAction();
 
-                let web3 = window.web3;
-                let account = await web3.eth.getAccounts()[0];
-
-                await EthPriceBetPool.executeBet(web3, account);
+                await EthPriceBetPool.executeBet(window.web3, account);
 
                 afterAction();
               }}

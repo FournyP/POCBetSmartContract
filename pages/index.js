@@ -1,8 +1,9 @@
 import Web3 from "web3";
 import React from "react";
-import Main from "./Main";
-import Navbar from "./Navbar";
-import { EthPriceBetPool } from "./services";
+import Main from "../components/Main";
+import Navbar from "../components/Navbar";
+import "bootstrap/dist/css/bootstrap.css";
+import { EthPriceBetPool } from "../services";
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -17,7 +18,7 @@ async function loadWeb3() {
   }
 }
 
-function App() {
+export default function Home() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   const [account, setAccount] = React.useState("");
@@ -83,5 +84,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
