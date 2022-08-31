@@ -34,7 +34,7 @@ export async function withdrawGains(web3, account) {
 
   return new Promise((resolve, reject) => {
     betPoolContract.methods
-      .withdrawGains()
+      .withdrawGains(account)
       .send({ from: account })
       .on("transactionHash", () => {
         resolve(true);
