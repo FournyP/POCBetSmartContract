@@ -69,7 +69,7 @@ export default function Home() {
                     setIsLoading(true);
                   }}
                   afterAction={async () => {
-                    await loadDatas();
+                    await loadDatas(window.web3, account);
                     setIsLoading(false);
                   }}
                   betBalance={betBalance}

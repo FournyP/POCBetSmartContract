@@ -18,8 +18,8 @@ export async function bet(web3, account, choice, amount) {
 
   return new Promise((resolve, reject) => {
     betPoolContract.methods
-      .bet(choice, { value: web3.utils.toWei(amount, "ether") })
-      .send({ from: account })
+      .bet(choice)
+      .send({ from: account, value: web3.utils.toWei(amount, "ether") })
       .on("transactionHash", () => {
         resolve(true);
       })

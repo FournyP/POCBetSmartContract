@@ -78,32 +78,71 @@ function Main(props) {
                 </div>
               </div>
             </div>
-            <button
-              className="btn btn-primary btn-block btn-lg"
-              onClick={async (event) => {
-                event.preventDefault();
-                beforeAction();
+            <div className="row">
+              <div className="col">
+                <button
+                  className="btn btn-primary btn-block btn-lg"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    try {
+                      beforeAction();
 
-                let weiAmount = window.web3.utils.toWei(amount, "Ether");
+                      await EthPriceBetPool.bet(
+                        window.web3,
+                        account,
+                        true,
+                        amount
+                      );
+                    } catch (e) {
+                      console.log();
+                    } finally {
+                      afterAction();
+                    }
+                  }}
+                >
+                  BET TRUE!
+                </button>
+              </div>
+              <div className="col">
+                <button
+                  className="btn btn-primary btn-block btn-lg"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    try {
+                      beforeAction();
 
-                await EthPriceBetPool.bet(window.web3, account, weiAmount);
-
-                afterAction();
-              }}
-            >
-              BET!
-            </button>
+                      await EthPriceBetPool.bet(
+                        window.web3,
+                        account,
+                        false,
+                        amount
+                      );
+                    } catch (e) {
+                      console.log(e);
+                    } finally {
+                      afterAction();
+                    }
+                  }}
+                >
+                  BET FALSE!
+                </button>
+              </div>
+            </div>
           </form>
           {isExecutedBet ? (
             <button
               className="btn btn-link btn-block btn-sm"
               onClick={async (event) => {
                 event.preventDefault();
-                beforeAction();
+                try {
+                  beforeAction();
 
-                await EthPriceBetPool.withdrawGains(window.web3, account);
-
-                afterAction();
+                  await EthPriceBetPool.withdrawGains(window.web3, account);
+                } catch (e) {
+                  console.log(e);
+                } finally {
+                  afterAction();
+                }
               }}
             >
               Withdraw Gains
@@ -113,11 +152,15 @@ function Main(props) {
               className="btn btn-link btn-block btn-sm"
               onClick={async (event) => {
                 event.preventDefault();
-                beforeAction();
+                try {
+                  beforeAction();
 
-                await EthPriceBetPool.executeBet(window.web3, account);
-
-                afterAction();
+                  await EthPriceBetPool.executeBet(window.web3, account);
+                } catch (e) {
+                  console.log(e);
+                } finally {
+                  afterAction();
+                }
               }}
             >
               Execute
