@@ -31,6 +31,11 @@ function Main(props) {
 
   return (
     <div id="content" className="mt-3">
+      <div className="row mb-4">
+        <div className="col">
+          <h2>Is Ethereum price greater than 1200$ ?</h2>
+        </div>
+      </div>
       <table className="table table-borderless text-muted text-center">
         <thead>
           <tr>
